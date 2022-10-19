@@ -91,14 +91,20 @@ static int proc_end(char *, char *);
  *	--------------------- */ 	
 const keyword_t	asm_dir[] =
 {
-	{"EQU", proc_equ}, 	{"DB", proc_db},
-	{"DW", proc_dw},	{"END", proc_end},
-  	{"INCLUDE", proc_include},{"MACRO", proc_macro},
-	{"ORG", proc_org},	{"DS", proc_ds},
-	{"IF", proc_if},	{"ENDM", proc_endm},
-	{"ELSE", proc_else},	{"ENDIF", proc_endif},
+	{"EQU", proc_equ}, 	
+	{"DB", proc_db},
+	{"DW", proc_dw},	
+	{"END", proc_end},
+  	{"INCLUDE", proc_include},
+	{"MACRO", proc_macro},
+	{"ORG", proc_org},	
+	{"DS", proc_ds},
+	{"IF", proc_if},	
+	{"ENDM", proc_endm},
+	{"ELSE", proc_else},	
+	{"ENDIF", proc_endif},
 	{"SET", proc_set},
-	{0, NULL}
+	{NULL, NULL}
 };
 
 
@@ -148,7 +154,7 @@ static int proc_if(char *label, char *equation)
 {
 	int	res	= exp_parser(equation);
 
-	if (++if_nest < (sizeof (if_true) / sizeof (int)))
+	if (++if_nest < (int)(sizeof (if_true) / sizeof (int)))
 	{
 #if 0
 		if_true[if_nest] = res != 0;		/*	C like behaviour. */
@@ -1217,13 +1223,14 @@ static int proc_org(char *label, char *equation)
 
 	/*	Check for Program Counter Over Range.
 	 *	------------------------------------- */	
-	if ((target.addr < 0) || (target.addr > 0xFFFF))
+	if ((target.addr < 0) || (target.addr > 0xFFFF)) {
 #if 0
 		msg_error("Program counter over range!", EC_PCOR);
 #else
 		msg_warning("Program counter wrap around", EC_PCOR);
 		if(target.addr > 0xFFFF) target.addr = target.addr - 0xffff; 
 #endif
+    }
 
 	target.pc_org	= target.pc;
 	
@@ -1375,7 +1382,6 @@ static int proc_macro(char *label, char *equation)
 static int is_endm_present(char *string)
 {
 	int	rv	= 0;
-	int	i;
 
 	size_t		string_len		= strlen(string);
 	const	char	*str_endm		= "ENDM";
@@ -1393,7 +1399,7 @@ static int is_endm_present(char *string)
 
 	/*	Search for the keyword in the string.
 	 * ------------------------------------- */
-	for (i = 0; i <= string_lim; i++)
+	for (size_t i = 0; i <= string_lim; i++)
 	{
 		/*	If keyword found, set return value to "found", and exit loop.
 		 *	------------------------------------------------------------- */
@@ -1434,7 +1440,6 @@ static int proc_endm(char *label, char *equation)
 	FILE	*fp_tm;
 	char	*p_text;
 	char	*macro_name;
-	int	i;
 
 	size_t	fn_macro_len;
 
@@ -1483,7 +1488,7 @@ static int proc_endm(char *label, char *equation)
 
 		/*	Flush the macro filename extension in the macro name.
 		 *	----------------------------------------------------- */
-		for (i = 0; i < fn_macro_len; i++)
+		for (size_t i = 0; i < fn_macro_len; i++)
 		{
 			if (macro_name[i] == '.')
 			{

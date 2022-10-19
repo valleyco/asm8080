@@ -206,7 +206,7 @@ SYMBOL *FindLabel(char *text)
 
 		/*	Check for buffer overflow.
 		 *	-------------------------- */	
-		if (++i >= sizeof (tmp))
+		if (++i >= (int)sizeof (tmp))
 		{
 			--i;
 			msg_error("\"FindLabel\" buffer overflow!", EC_FLBOF);

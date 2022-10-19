@@ -276,7 +276,7 @@ static char *parse_reg16bits(char *text, unsigned char ar)
 	char	buf_ori[PARSE_REG16BITS_BUF_SIZE];	/*	Buffer for original text. */
 
 	int	i		= 0;
-	int	text_len	= 0;
+	size_t	text_len	= 0;
 	char	*p_text		= text;
 	int	reg_not_allowed	= 0;
 

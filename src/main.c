@@ -556,7 +556,7 @@ static void print_symbols_table(void)
 		/*	- Notes: Must have a value > 0, in case there is no
 		 *	  symbols at all.
 	 	 *	*/	 
-		int		symbol_name_len_max	= 6;
+		size_t		symbol_name_len_max	= 6;
 
 		int		symbol_field_size;
 
@@ -976,7 +976,7 @@ int	status		= LIST_ONLY;
 
 		/*	If nothing else than the label/name on the line...
 		 *	-------------------------------------------------- */	
-		if ((*text == '\0') || (*text == ';')&&(*(text-1)!=';'))
+		if ((*text == '\0') || ((*text == ';') && (*(text-1)!=';')))
 		{
 			/*	- If code section is activated and there is no macro
 			 *	  definition processed, process label.
@@ -1044,14 +1044,14 @@ int	status		= LIST_ONLY;
 		/*	Copy third field to equation buffer.
 		 *	************************************	*/
 
-		if ((*text != '\0') || (*text != ';')&&(*(text-1)!=';'))
+		if ((*text != '\0') || ((*text != ';') && (*(text-1)!=';')))
 		{
 			i					= 0;
 			msg_displayed	= 0;
 
 			while ((iscntrl((int) *text) == 0) && ((*text != ';')||(*(text-1)==';')))
 			{
-				if (i < ((EQUATION_SIZE_MAX * sizeof (char)) - 1))
+				if (i < ((EQUATION_SIZE_MAX * (int)sizeof (char)) - 1))
 				{
 					p_equation[i]	= *(text++);
 					i++;
@@ -2179,7 +2179,6 @@ static void display_version(void)
 
 static void asm_pass1(void)
 {
-	int	i;
 
 	/*	- Notes: Only "codeline" level 0 need to be clear, since
 	 *	  all other "codeline" level are cleared at time file "INCLUDE"
@@ -2214,7 +2213,6 @@ static void asm_pass1(void)
 
 static void asm_pass2(void)
 {
-	int	i;
 
 	/*	- Notes: Only "codeline" level 0 need to be clear, since
 	 *	  all other "codeline" level are cleared at time file "INCLUDE"
@@ -2254,7 +2252,7 @@ static void init(void)
 
 	/*	Init. "in_fn" array.
 	 *	-------------------- */	
-	for (i = 0; i < (sizeof (in_fn) / sizeof (char *)); i++)
+	for (i = 0; i < (int)(sizeof (in_fn) / sizeof (char *)); i++)
 		in_fn[i] = NULL;
 }
 
@@ -2393,12 +2391,11 @@ static int process_option_l(char *text)
  	 *	----------------------------------------------------------- */
 	if (string_len > 0)
 	{
-		int		i;
 		int		dot_pos		= 0;
 
 		/*	Search for the beginning of an extension.
 		 *	----------------------------------------- */
-		for (i = 0; i < (string_len - 1); i++)
+		for (size_t i = 0; i < (string_len - 1); i++)
 		{
 			if (	(text[i] == '.') && (text[i + 1] != '.') &&
 					(text[i + 1] != PATH_SEPARATOR_CHAR))
@@ -2562,12 +2559,11 @@ static int process_option_o(char *text)
  	 *	--------------------------------------------------- */
 	if (string_len > 0)
 	{
-		int		i;
-		int		dot_pos		= 0;
+		size_t		dot_pos		= 0;
 
 		/*	Search for the beginning of an extension.
 		 *	----------------------------------------- */
-		for (i = 0; i < (string_len - 1); i++)
+		for (size_t i = 0; i < (string_len - 1); i++)
 		{
 			if (	(text[i] == '.') && (text[i + 1] != '.') &&
 					(text[i + 1] != PATH_SEPARATOR_CHAR))
@@ -2873,8 +2869,7 @@ static int process_input_file(char *text)
 	 *	*/
 	static int	if_processed	= 0;
 
-	int		i;
-	int		dot_pos	= 0;					/*	Dot Position. */
+	size_t		dot_pos	= 0;					/*	Dot Position. */
 	size_t	ln			= strlen(text);
 	size_t	in_fn_len;
 
@@ -2897,7 +2892,7 @@ static int process_input_file(char *text)
 
 	/*	Search for the beginning of an extension.
 	 *	----------------------------------------- */
-	for (i = 0; i < (ln - 1); i++)
+	for (size_t i = 0; i < (ln - 1); i++)
 	{
 		if (	(text[i] == '.') && (text[i + 1] != '.') &&
 			  	(text[i + 1] != PATH_SEPARATOR_CHAR))

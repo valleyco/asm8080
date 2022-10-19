@@ -1257,7 +1257,7 @@ dalep_01:
 					{
 						if (islabelchar((int) *text) != 0)
 						{
-							if (i < (sizeof (label) - 3))
+							if (i < (int)(sizeof (label) - 3))
 							{
 								label[i]	= *(text++);
 								i++;
@@ -1438,7 +1438,7 @@ static void push(int value)
 
 	/*	Check for stack overflow.
 	 *	------------------------- */	
-	if (++p_ep_stack->level >= (sizeof (p_ep_stack->word) / sizeof (int)))
+	if (++p_ep_stack->level >= (int)(sizeof (p_ep_stack->word) / sizeof (int)))
 	{
 		p_ep_stack->level--;
 		msg_error("Expression parser stack push overflow!", EC_EPSPOF);
